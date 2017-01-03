@@ -5,6 +5,8 @@
 //#include "std_msgs/Int16MultiArray.h"
 #include "std_msgs/Int16.h"
 #include "led_driver_controller.h"
+#include <iostream>
+#include <thread>
 class Driver
 {
 private:
@@ -19,6 +21,9 @@ private:
     led_driver_controller *led0;
     led_driver_controller *led1;
 
+    std_msgs::Int16 led0_state;
+    std_msgs::Int16 led1_state;
+
 private:
     void led0_subscriber(const std_msgs::Int16ConstPtr &input);
     void led1_subscriber(const std_msgs::Int16ConstPtr &input);
@@ -26,6 +31,7 @@ private:
     Driver();
 public:
     Driver(ros::NodeHandle &n);
+    void seperateThread();
 };
 
 #endif // DRIVER_H

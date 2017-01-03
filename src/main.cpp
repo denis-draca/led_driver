@@ -1,15 +1,22 @@
 #include "ros/ros.h"
 #include "driver.h"
+//#include <thread>
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "led_driver_controller");
-  ros::NodeHandle n;
+    ros::init(argc, argv, "led_driver_controller");
+    ros::NodeHandle n;
 
-  Driver driver(n);
 
-  ros::spin();
-  ros::shutdown();
+    std::shared_ptr<Driver> gc(new Driver(n));
+    std::thread t(&Driver::seperateThread,gc);
 
-  return 0;
+    //  Driver driver(n);
+
+    ros::spin();
+    ros::shutdown();
+
+    t.join();
+
+    return 0;
 }

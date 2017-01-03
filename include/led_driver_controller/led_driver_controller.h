@@ -23,6 +23,7 @@ private:
 
     led_driver_controller();
 public:
+
     ///
     /// \brief start - starts the adc output
     /// \return (int) - returns -1 if the process failed
