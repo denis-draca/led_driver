@@ -21,7 +21,7 @@ Driver::Driver(ros::NodeHandle &n):
 
 void Driver::seperateThread()
 {
-    while(1)
+    while(ros::ok())
     {
         std::this_thread::sleep_for(chrono::milliseconds(500));
 

@@ -10,6 +10,8 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <iostream>
+
 #define BUFFER_MAX 3
 
 using namespace std;
