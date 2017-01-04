@@ -51,7 +51,7 @@ int led_driver_controller::start()
         return(-1);
     }
 
-    bytes_written = snprintf(buffer, BUFFER_MAX, "%d", _connected_pin);
+    bytes_written = snprintf(buffer, BUFFER_MAX, "%d", 0);
     write(fd, buffer, bytes_written);
     close(fd);
 
@@ -64,9 +64,9 @@ int led_driver_controller::start()
         enable_file.open("/sys/class/pwm/pwmchip0/pwm0/enable");
     }
     else{
-        period_file.open("/sys/class/pwm/pwmchip1/pwm1/period");
-        duty_file.open("/sys/class/pwm/pwmchip1/pwm1/duty_cycle");
-        enable_file.open("/sys/class/pwm/pwmchip1/pwm1/enable");
+        period_file.open("/sys/class/pwm/pwmchip1/pwm0/period");
+        duty_file.open("/sys/class/pwm/pwmchip1/pwm0/duty_cycle");
+        enable_file.open("/sys/class/pwm/pwmchip1/pwm0/enable");
     }
 
     if(!period_file.is_open())
@@ -110,7 +110,7 @@ int led_driver_controller::change_period(int new_period)
     }
     else
     {
-        period_file.open("/sys/class/pwm/pwmchip1/pwm1/period");
+        period_file.open("/sys/class/pwm/pwmchip1/pwm0/period");
     }
 
     if (!period_file.is_open())
@@ -137,7 +137,7 @@ int led_driver_controller::change_duty(double new_duty)
     }
     else
     {
-        duty_file.open("/sys/class/pwm/pwmchip1/pwm1/duty_cycle");
+        duty_file.open("/sys/class/pwm/pwmchip1/pwm0/duty_cycle");
     }
 
     if (!duty_file.is_open())
