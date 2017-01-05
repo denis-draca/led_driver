@@ -28,6 +28,10 @@ led_driver_controller::~led_driver_controller()
         file.open("/sys/class/pwm/pwmchip1/unexport");
     }
 
+    if(!file.is_open())
+    {
+        fprintf(stderr, "Failed to unexport pin\n");
+    }
     file << _connected_pin;
 
     file.close();

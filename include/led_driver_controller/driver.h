@@ -2,7 +2,6 @@
 #define DRIVER_H
 
 #include "ros/ros.h"
-//#include "std_msgs/Int16MultiArray.h"
 #include "std_msgs/Int16.h"
 #include "led_driver_controller.h"
 #include <iostream>
@@ -30,6 +29,7 @@ private:
 
     Driver();
 public:
+    ~Driver();
     Driver(ros::NodeHandle &n);
     void seperateThread();
 };

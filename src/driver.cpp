@@ -19,6 +19,13 @@ Driver::Driver(ros::NodeHandle &n):
     led1->start();
 }
 
+Driver::~Driver()
+{
+    std::cout << "\033[1;31m\nCleaning Resources then closing\033[0m" << std::endl;
+    delete led0;
+    delete led1;
+}
+
 void Driver::seperateThread()
 {
     while(ros::ok())
