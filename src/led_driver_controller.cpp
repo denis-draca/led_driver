@@ -68,43 +68,21 @@ int led_driver_controller::start()
         write(fd, buffer, bytes_written);
         close(fd);
 
-//        ofstream period_file;
-//        ofstream duty_file;
         ofstream enable_file;
-        if (_connected_pin == 0){
-//            period_file.open("/sys/class/pwm/pwmchip0/pwm0/period");
-//            duty_file.open("/sys/class/pwm/pwmchip0/pwm0/duty_cycle");
+        if (_connected_pin == 0)
+        {
             enable_file.open("/sys/class/pwm/pwmchip0/pwm0/enable");
         }
-        else{
-//            period_file.open("/sys/class/pwm/pwmchip1/pwm0/period");
-//            duty_file.open("/sys/class/pwm/pwmchip1/pwm0/duty_cycle");
+        else
+        {
             enable_file.open("/sys/class/pwm/pwmchip1/pwm0/enable");
         }
-
-//        if(!period_file.is_open())
-//        {
-//            fprintf(stderr, "Failed to open PERIOD file for writing!\n");
-//            return -1;
-//        }
-
-//        if(!duty_file.is_open())
-//        {
-//            fprintf(stderr, "Failed to open DUTY file for writing!\n");
-//            return -1;
-//        }
 
         if(!enable_file.is_open())
         {
             fprintf(stderr, "Failed to open ENABLE file for writing!\n");
             return -1;
         }
-
-//        period_file << _period;
-//        period_file.close();
-
-//        duty_file << _period*_duty;
-//        duty_file.close();
 
         change_period(_period);
         change_duty(_duty);
@@ -114,6 +92,7 @@ int led_driver_controller::start()
 
         start_called_ = true;
     }
+
     else
     {
         std::cout << "\033[1;31m\nPWM Already Running, USE change_period or change_duty to make changes to the PWM value\033[0m" << std::endl;
