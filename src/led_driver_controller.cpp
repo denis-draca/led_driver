@@ -18,7 +18,7 @@ led_driver_controller::led_driver_controller(int pin, int period, double duty)
     }
 }
 
-led_driver_controller::~led_driver_controller()
+int led_driver_controller::stop()
 {
     ofstream file;
     if(_connected_pin == 0){
@@ -35,70 +35,89 @@ led_driver_controller::~led_driver_controller()
     file << _connected_pin;
 
     file.close();
+
+    std::cout << "\033[1;31m\nPWM Stopped, use start() to start PWM Again\033[0m" << std::endl;
+}
+
+led_driver_controller::~led_driver_controller()
+{
+    stop();
 }
 
 int led_driver_controller::start()
 {
-    char buffer[BUFFER_MAX];
-    ssize_t bytes_written;
-    int fd;
-
-    if(_connected_pin == 0){
-        fd = open("/sys/class/pwm/pwmchip0/export", O_WRONLY);
-    }
-    else{
-        fd = open("/sys/class/pwm/pwmchip1/export", O_WRONLY);
-    }
-
-    if (-1 == fd) {
-        fprintf(stderr, "Failed to open export for PWM writing!\n");
-        return(-1);
-    }
-
-    bytes_written = snprintf(buffer, BUFFER_MAX, "%d", 0);
-    write(fd, buffer, bytes_written);
-    close(fd);
-
-    ofstream period_file;
-    ofstream duty_file;
-    ofstream enable_file;
-    if (_connected_pin == 0){
-        period_file.open("/sys/class/pwm/pwmchip0/pwm0/period");
-        duty_file.open("/sys/class/pwm/pwmchip0/pwm0/duty_cycle");
-        enable_file.open("/sys/class/pwm/pwmchip0/pwm0/enable");
-    }
-    else{
-        period_file.open("/sys/class/pwm/pwmchip1/pwm0/period");
-        duty_file.open("/sys/class/pwm/pwmchip1/pwm0/duty_cycle");
-        enable_file.open("/sys/class/pwm/pwmchip1/pwm0/enable");
-    }
-
-    if(!period_file.is_open())
+    if(!start_called_)
     {
-        fprintf(stderr, "Failed to open PERIOD file for writing!\n");
-        return -1;
-    }
+        char buffer[BUFFER_MAX];
+        ssize_t bytes_written;
+        int fd;
 
-    if(!duty_file.is_open())
+        if(_connected_pin == 0){
+            fd = open("/sys/class/pwm/pwmchip0/export", O_WRONLY);
+        }
+        else{
+            fd = open("/sys/class/pwm/pwmchip1/export", O_WRONLY);
+        }
+
+        if (-1 == fd) {
+            fprintf(stderr, "Failed to open export for PWM writing!\n");
+            return(-1);
+        }
+
+        bytes_written = snprintf(buffer, BUFFER_MAX, "%d", 0);
+        write(fd, buffer, bytes_written);
+        close(fd);
+
+//        ofstream period_file;
+//        ofstream duty_file;
+        ofstream enable_file;
+        if (_connected_pin == 0){
+//            period_file.open("/sys/class/pwm/pwmchip0/pwm0/period");
+//            duty_file.open("/sys/class/pwm/pwmchip0/pwm0/duty_cycle");
+            enable_file.open("/sys/class/pwm/pwmchip0/pwm0/enable");
+        }
+        else{
+//            period_file.open("/sys/class/pwm/pwmchip1/pwm0/period");
+//            duty_file.open("/sys/class/pwm/pwmchip1/pwm0/duty_cycle");
+            enable_file.open("/sys/class/pwm/pwmchip1/pwm0/enable");
+        }
+
+//        if(!period_file.is_open())
+//        {
+//            fprintf(stderr, "Failed to open PERIOD file for writing!\n");
+//            return -1;
+//        }
+
+//        if(!duty_file.is_open())
+//        {
+//            fprintf(stderr, "Failed to open DUTY file for writing!\n");
+//            return -1;
+//        }
+
+        if(!enable_file.is_open())
+        {
+            fprintf(stderr, "Failed to open ENABLE file for writing!\n");
+            return -1;
+        }
+
+//        period_file << _period;
+//        period_file.close();
+
+//        duty_file << _period*_duty;
+//        duty_file.close();
+
+        change_period(_period);
+        change_duty(_duty);
+
+        enable_file << 1;
+        enable_file.close();
+
+        start_called_ = true;
+    }
+    else
     {
-        fprintf(stderr, "Failed to open DUTY file for writing!\n");
-        return -1;
+        std::cout << "\033[1;31m\nPWM Already Running, USE change_period or change_duty to make changes to the PWM value\033[0m" << std::endl;
     }
-
-    if(!enable_file.is_open())
-    {
-        fprintf(stderr, "Failed to open ENABLE file for writing!\n");
-        return -1;
-    }
-
-    period_file << _period;
-    period_file.close();
-
-    duty_file << _period*_duty;
-    duty_file.close();
-
-    enable_file << 1;
-    enable_file.close();
 
 
 }

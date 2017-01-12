@@ -61,6 +61,7 @@ Driver::Driver(ros::NodeHandle &n, int pin):
 Driver::~Driver()
 {
     std::cout << "\033[1;31m\nCleaning Resources then closing\033[0m" << std::endl;
+
     delete led0;
     delete led1;
 

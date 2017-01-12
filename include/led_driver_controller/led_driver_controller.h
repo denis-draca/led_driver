@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <stdexcept>
+#include <iostream>
 
 #define BUFFER_MAX 3
 
@@ -20,6 +21,8 @@ private:
     int _connected_pin; //!< Which pin the led driver is connected to, it can be either adc0 or adc1
     int _period;        //!< The period of the adc output
     double _duty;       //!< Duty cycle of the adc output expressed as a percentage of on time
+
+    bool start_called_ = false;
 
     led_driver_controller();
 public:
@@ -48,6 +51,8 @@ public:
     /// \param duty
     ///
     led_driver_controller(int pin, int period, double duty);
+
+    int stop();
 
     ~led_driver_controller();   //!< Destructor, cleans up the sys files associated with the pwm pin, it writes to the unexport file
 

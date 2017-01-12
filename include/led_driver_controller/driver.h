@@ -4,7 +4,7 @@
 #include "ros/ros.h"
 #include "std_msgs/Int16.h"
 #include "led_driver_controller.h"
-#include <iostream>
+//#include <iostream>
 #include <thread>
 class Driver
 {
@@ -55,7 +55,7 @@ private:
 
     Driver();
 public:
-    ~Driver();//!< Cleans up the points built within this class (The LED Controllers) which in turn will call the objects destructor causing a system clean up for sysfs
+    ~Driver();//!< Cleans up the pointers built within this class (The LED Driver Controllers) which in turn will call the objects destructor causing a system clean up for sysfs
 
     Driver(ros::NodeHandle &n, int pin);
 
